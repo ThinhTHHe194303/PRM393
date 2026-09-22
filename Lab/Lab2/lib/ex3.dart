@@ -11,30 +11,49 @@ void main() {
   }
 
   //Switch
-  int gender = 1;
-  switch (gender) {
+  int day = 3;
+
+  switch (day) {
     case 1:
-      print("Male");
+      print("Monday");
       break;
-
     case 2:
-      print("Female");
+      print("Tuesday");
       break;
-
+    case 3:
+      print("Wednesday");
+      break;
+    case 4:
+      print("Thursday");
+      break;
+    case 5:
+      print("Friday");
+      break;
+    case 6:
+      print("Saturday");
+      break;
+    case 7:
+      print("Sunday");
+      break;
     default:
-      print("Other");
-      break;
+      print("Invalid day");
   }
 
   List<String> names = ["Alice", "Bob", "Charlie"];
 
-  //For-in loop
+// For loop
+  print("For loop: ");
+  for (int i = 0; i < names.length; i++) {
+    print(names[i]);
+  }
+
+// For-in loop
   print("For-in loop: ");
   for (String name in names) {
     print(name);
   }
 
-  //For each
+// For each
   print("For each: ");
   names.forEach((name) {
     print(name);
