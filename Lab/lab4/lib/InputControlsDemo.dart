@@ -12,7 +12,7 @@ class InputcontrolsDemo extends StatefulWidget {
 class _InputcontrolsDemoState extends State<InputcontrolsDemo> {
   double volume = 50;
   bool isDarkMode = false;
-  String selectedOption = 'Option 1';
+  String selectedOption = 'Action';
   DateTime? selectedDate;
 
   // Show DatePicker
