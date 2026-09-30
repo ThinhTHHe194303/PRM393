@@ -28,19 +28,4 @@ class Movie {
     required this.trailers,
     this.isFavorite = false,
   });
-
-  // Used by the Favorite toggle (optional enhancement) to produce
-  // a new Movie with isFavorite flipped, since Movie is immutable.
-  Movie copyWith({bool? isFavorite}) {
-    return Movie(
-      id: id,
-      title: title,
-      posterUrl: posterUrl,
-      overview: overview,
-      genres: genres,
-      rating: rating,
-      trailers: trailers,
-      isFavorite: isFavorite ?? this.isFavorite,
-    );
-  }
 }
