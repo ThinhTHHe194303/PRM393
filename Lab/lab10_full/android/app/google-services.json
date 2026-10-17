@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "272046637193",
+    "project_id": "prm-lab10-4",
+    "storage_bucket": "prm-lab10-4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272046637193:android:b6c88fcf2a9c893f898658",
+        "android_client_info": {
+          "package_name": "com.example.lab10_4_firebase_google_sign_in"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272046637193-qtcfvlavse02otoa11pfck2a02mah0mu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lab10_4_firebase_google_sign_in",
+            "certificate_hash": "81b8f852c72886d1ef5add3f7771998c7ce95829"
+          }
+        },
+        {
+          "client_id": "272046637193-tceik4bb51jc48bnnlhgnc32hrg9toop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVAsjbN7unZh-TbMsj91UcdQCGBSDgtAI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272046637193-tceik4bb51jc48bnnlhgnc32hrg9toop.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "272046637193-0rgdbk2i5p4ufg4sl03aukrlfsodd9sp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lab104FirebaseGoogleSignIn"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272046637193:android:49657e892ed76e64898658",
+        "android_client_info": {
+          "package_name": "com.example.lab10_full"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "272046637193-4medheu44e9ua2pphgupb6pkprpsdgl8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lab10_full",
+            "certificate_hash": "81b8f852c72886d1ef5add3f7771998c7ce95829"
+          }
+        },
+        {
+          "client_id": "272046637193-tceik4bb51jc48bnnlhgnc32hrg9toop.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVAsjbN7unZh-TbMsj91UcdQCGBSDgtAI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "272046637193-tceik4bb51jc48bnnlhgnc32hrg9toop.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "272046637193-0rgdbk2i5p4ufg4sl03aukrlfsodd9sp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lab104FirebaseGoogleSignIn"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
