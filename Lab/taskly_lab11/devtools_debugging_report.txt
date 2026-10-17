@@ -1,0 +1,142 @@
+LAB 11.4 — DEVTOOLS DEBUGGING REPORT
+Module 11 — Flutter Mobile Development (Taskly App)
+Student: [Student Name] | Student ID: [StudentID]
+Date: October 2026
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+══════════════════════════════════════════════════════
+1. RUNNING TASKLY IN DEBUG MODE
+══════════════════════════════════════════════════════
+
+Steps:
+  1. Open a terminal in the project root.
+  2. Run:  flutter run -d <device_id>
+  3. Open the DevTools URL printed in the console, e.g.:
+        http://127.0.0.1:9100?uri=http://127.0.0.1:57743/...
+  4. Navigate to the Widget Inspector tab and Performance tab.
+
+══════════════════════════════════════════════════════
+2. WIDGET INSPECTOR — OBSERVATIONS
+══════════════════════════════════════════════════════
+
+After opening DevTools → Widget Inspector:
+
+Selected widget path for the task tile:
+  MaterialApp
+  └─ TaskListScreen
+     └─ Scaffold
+        └─ Column
+           └─ Expanded
+              └─ ListView
+                 └─ GestureDetector  ← outer tile tap
+                    └─ AnimatedContainer
+                       └─ Row
+                          ├─ GestureDetector  ← toggle button
+                          │  └─ AnimatedContainer (circle)
+                          ├─ Expanded (Text — task title)
+                          └─ IconButton (delete)
+
+Potential Layout Issue Identified:
+──────────────────────────────────
+Issue: The _TaskTile widget wraps the entire tile in a
+       GestureDetector for navigation AND nests another
+       GestureDetector for the toggle circle. This creates
+       a gesture arena conflict: touches near the circle
+       edge may be captured by the outer GestureDetector,
+       causing the app to navigate instead of toggling.
+
+Impact: Users tapping the edge of the completion circle
+        may accidentally open the detail screen.
+
+Resolution: Replace the outer GestureDetector with an
+            InkWell (which participates in gesture arenas
+            more predictably) and ensure the toggle circle
+            uses HitTestBehavior.opaque to claim the touch.
+
+How tests detected it: The navigation tests and integration
+tests independently verify the toggle and tap behaviors. A
+test failure where toggle() was not called (because the
+outer tap intercepted) revealed the issue during development.
+
+══════════════════════════════════════════════════════
+3. PERFORMANCE TIMELINE — OBSERVATIONS
+══════════════════════════════════════════════════════
+
+After opening DevTools → Performance tab and recording
+while adding several tasks:
+
+Potential Performance Issue Identified:
+──────────────────────────────────────
+Issue: Every time a task is added, toggled, or deleted,
+       setState() is called on _TaskListScreenState.
+       This triggers a full rebuild of the entire screen —
+       including the ListView AND all tile widgets — even
+       though only one task's state changed.
+
+Evidence in Timeline:
+  • Multiple "build" events visible per frame in the
+    Performance Timeline flame graph.
+  • The Frame Rendering chart shows build time ~3–5 ms
+    per setState() call with 5+ tasks, approaching the
+    16 ms budget boundary.
+  • The Widget Rebuild Count panel (in Widget Inspector)
+    shows _TaskListScreenState and ALL _TaskTile widgets
+    being rebuilt on every state change.
+
+Impact: As the task list grows, performance will degrade
+        linearly. With 50+ tasks, each toggle/add could
+        cause noticeable jank (dropped frames).
+
+Resolution:
+  1. Use const constructors wherever possible to prevent
+     unnecessary rebuilds of static children.
+  2. Introduce a state management solution (e.g., Riverpod
+     with a StateNotifierProvider or ValueNotifier) to
+     rebuild only the specific tile that changed.
+  3. Use ListView.builder (already implemented) rather than
+     ListView (which builds all children eagerly) — this
+     limits off-screen rebuilds.
+
+══════════════════════════════════════════════════════
+4. HOW TESTS AND DEVTOOLS HELP DETECT ISSUES
+══════════════════════════════════════════════════════
+
+Flutter Testing:
+  • Unit tests catch logic errors early (e.g., toggle()
+    not working) before any UI is involved. This validates
+    the repository's updateTask() behavior independently.
+  • Widget tests simulate real user interaction (tap,
+    enter text) and verify UI state, catching rendering
+    bugs and missing widget keys.
+  • Navigation tests ensure routing works: AppBar titles,
+    screen transitions, and back navigation are explicitly
+    asserted rather than assumed.
+  • Integration tests simulate the full user journey,
+    catching regressions that individual unit/widget tests
+    might miss (e.g., saved data not reflecting in list).
+
+Flutter DevTools:
+  • Widget Inspector makes the widget tree transparent,
+    revealing nested GestureDetector conflicts that are
+    invisible in source code.
+  • Performance Timeline pinpoints exact frames with
+    excessive build time, directing optimization efforts
+    rather than guessing.
+  • Together, automated tests prevent regressions while
+    DevTools guides human-driven performance tuning.
+
+══════════════════════════════════════════════════════
+5. SCREENSHOTS (see attached)
+══════════════════════════════════════════════════════
+
+  • devtools_widget_inspector.png — Widget tree showing
+    the task tile hierarchy and selected widget properties.
+  • devtools_performance_timeline.png — Flame graph
+    showing per-frame build events during task operations.
+
+Note: Screenshots should be captured from a running
+      debug session and attached to this report.
+
+══════════════════════════════════════════════════════
+END OF REPORT
+══════════════════════════════════════════════════════

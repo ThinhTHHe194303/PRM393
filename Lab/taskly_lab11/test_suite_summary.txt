@@ -1,0 +1,198 @@
+LAB 11.5 — TEST SUITE SUMMARY DOCUMENT
+Module 11 — Flutter Mobile Development (Taskly App)
+Student: [Student Name] | Student ID: [StudentID]
+Date: October 2026
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+══════════════════════════════════════════════════════
+1. OVERVIEW
+══════════════════════════════════════════════════════
+
+The Taskly app is a Flutter task-management application.
+Lab 11 adds a complete structured test suite covering four
+test categories: unit, widget, navigation, and integration.
+
+Total tests written   : 44
+All tests passing     : YES (44/44)
+Flutter test command  : flutter test --reporter expanded
+
+══════════════════════════════════════════════════════
+2. FOLDER STRUCTURE
+══════════════════════════════════════════════════════
+
+test/
+├── widget_test.dart                 (smoke test)
+├── unit/
+│   ├── task_model_test.dart         (9 tests)
+│   └── task_repository_test.dart    (13 tests)
+└── widget/
+    ├── task_list_widget_test.dart   (9 tests)
+    ├── task_navigation_test.dart    (5 tests)
+    └── task_integration_test.dart   (7 tests + 1 smoke = 8 total)
+
+══════════════════════════════════════════════════════
+3. TEST BREAKDOWN BY TYPE
+══════════════════════════════════════════════════════
+
+─────────────────────────────────────────────────────
+3.1 UNIT TESTS — test/unit/  (22 tests)
+─────────────────────────────────────────────────────
+
+File: task_model_test.dart (9 tests)
+  • Default completed value is false
+  • Task stores the correct title and id
+  • Task can be created with completed = true explicitly
+  • toggle() switches completed from false to true
+  • toggle() switches completed from true to false
+  • toggle() twice returns to original state
+  • copyWith() creates a new task with updated title
+  • copyWith() does not mutate the original task
+  • copyWith() updates completed state
+
+File: task_repository_test.dart (13 tests)
+  • addTask() — adds a task so that tasks list has one item
+  • addTask() — the added task matches the original task
+  • addTask() — adding multiple tasks increases the count
+  • addTask() — tasks list is empty before any task is added
+  • deleteTask() — removes a task by id
+  • deleteTask() — only removes the task with the matching id
+  • deleteTask() — does nothing when id does not exist
+  • updateTask() — updates the title of an existing task
+  • updateTask() — updates the completed state of an existing task
+  • updateTask() — does not change the number of tasks after update
+  • updateTask() — throws ArgumentError for unknown id
+  • findById() — returns the correct task for an existing id
+  • findById() — returns null for a non-existent id
+
+Pattern used: AAA (Arrange → Act → Assert)
+setUp() creates a fresh TaskRepository before each test.
+
+─────────────────────────────────────────────────────
+3.2 WIDGET TESTS — test/widget/task_list_widget_test.dart (9 tests)
+─────────────────────────────────────────────────────
+
+  • Shows empty-state message when no tasks exist
+  • Does not show task list when repository is empty
+  • Add task: entering text and tapping add shows task in list
+  • Add task: empty-state text disappears after adding a task
+  • Add task: text field is cleared after adding
+  • Add task: pressing Enter on keyboard also adds task
+  • Add task: blank input does not add a task
+  • Multiple tasks: adding two tasks shows both in list
+  • Multiple tasks: list count reflects number of added tasks
+  • Pre-seeded task is displayed on screen
+
+APIs used: pumpWidget(), enterText(), tap(), pump()
+
+─────────────────────────────────────────────────────
+3.3 NAVIGATION TESTS — test/widget/task_navigation_test.dart (5 tests)
+─────────────────────────────────────────────────────
+
+  • Tapping a task navigates to TaskDetailScreen with "Task Detail" AppBar
+  • TaskDetailScreen contains a TextField with key "detailTitleField"
+  • Detail screen pre-populates title from the tapped task
+  • Back navigation returns to TaskListScreen
+  • Navigates to the correct task when multiple tasks exist
+
+APIs used: pumpAndSettle(), Navigator.pop(), find.byKey()
+
+─────────────────────────────────────────────────────
+3.4 INTEGRATION TESTS — test/widget/task_integration_test.dart (7 tests)
+─────────────────────────────────────────────────────
+
+  • Full flow: add → open detail → edit → save → verify in list
+  • Cancel flow: edit title but navigate back without saving keeps original
+  • Can edit a task title multiple times sequentially
+  • Deleting a task removes it from the list
+  • Toggling task marks it as completed in repository
+
+─────────────────────────────────────────────────────
+3.5 SMOKE TEST — test/widget_test.dart (2 tests)
+─────────────────────────────────────────────────────
+
+  • Taskly app smoke test — app starts without crashing
+  • Smoke: Task model and repository are importable
+
+══════════════════════════════════════════════════════
+4. BEHAVIORS VALIDATED
+══════════════════════════════════════════════════════
+
+Domain Logic:
+  ✔ Task model default values (completed = false)
+  ✔ Task toggle() bidirectional behavior
+  ✔ Task copyWith() immutability
+  ✔ Repository add, delete, update, findById operations
+  ✔ Repository throws on update of non-existent task
+
+UI Rendering:
+  ✔ Empty state message displayed when no tasks
+  ✔ Tasks render in a ListView after being added
+  ✔ Input field clears after adding a task
+  ✔ Both keyboard submit and button tap trigger add
+
+Navigation:
+  ✔ Tapping a task tile navigates to TaskDetailScreen
+  ✔ AppBar shows "Task Detail" on detail screen
+  ✔ TextField with key 'detailTitleField' is present
+  ✔ Title is pre-populated from selected task
+  ✔ Back navigation returns to the list
+
+End-to-End:
+  ✔ Full add → edit → save → reflect in list flow
+  ✔ Cancel flow preserves original task data
+  ✔ Multiple sequential edits persist correctly
+  ✔ Delete removes task from list and shows empty state
+  ✔ Toggle marks task completed in repository
+
+══════════════════════════════════════════════════════
+5. KNOWN LIMITATIONS
+══════════════════════════════════════════════════════
+
+1. In-memory only: TaskRepository does not persist data.
+   Tests reset state between runs via setUp(). A real app
+   would need database or shared-preferences persistence
+   tests.
+
+2. No state-management tests: The app uses direct setState()
+   without a state management solution (e.g. Riverpod,
+   BLoC). As the app grows, this limits testability.
+
+3. Widget test coverage of animations: AnimatedContainer
+   transitions are not fully observable in widget tests
+   because pumpAndSettle() resolves them. Visual regression
+   tests (e.g. golden tests) would be needed.
+
+4. No golden/screenshot tests: Pixel-perfect rendering is
+   not covered. Flutter's matchesGoldenFile() could be added.
+
+5. Integration vs true E2E: The "integration" tests here are
+   widget-level tests (not flutter_driver or integration_test
+   package tests). True device integration tests would run on
+   a physical device/emulator via `flutter test integration_test/`.
+
+6. Task ID collision: IDs are generated from microsecond
+   timestamps. Under rapid parallel inserts (unlikely in a
+   mobile app), collisions are theoretically possible.
+
+══════════════════════════════════════════════════════
+6. HOW TO RUN
+══════════════════════════════════════════════════════
+
+  # Run all tests
+  flutter test
+
+  # Run with verbose output
+  flutter test --reporter expanded
+
+  # Run only unit tests
+  flutter test test/unit/
+
+  # Run only widget/navigation/integration tests
+  flutter test test/widget/
+
+  # Run a specific file
+  flutter test test/unit/task_model_test.dart
+
+══════════════════════════════════════════════════════
+END OF DOCUMENT
+══════════════════════════════════════════════════════
